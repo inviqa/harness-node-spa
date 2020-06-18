@@ -1,0 +1,7 @@
+
+function task_start_dev()
+{
+    {% for step in @('backend.start_dev.steps') -%}
+    {{ step|raw }}
+    {% endfor %}
+}

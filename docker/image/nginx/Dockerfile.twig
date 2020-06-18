@@ -1,0 +1,5 @@
+FROM {{ @('docker.repository') ~ ':' ~ @('app.version') }}-node as node
+
+FROM {{ @('docker.image.nginx') }} as nginx
+
+COPY --from=node --chown=root:root {{ @('app.dist_path') }} /usr/share/nginx/html

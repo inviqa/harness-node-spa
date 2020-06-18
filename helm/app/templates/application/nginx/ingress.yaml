@@ -1,0 +1,25 @@
+{{ if eq .Values.ingress.type "standard" }}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+{{- if .Values.services.nginx.ingress.annotations }}
+  annotations:
+  {{- range $key, $value := .Values.services.nginx.ingress.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+{{- end }}
+  creationTimestamp: null
+  labels:
+    app.service: {{ .Values.resourcePrefix }}nginx
+  name: {{ .Values.resourcePrefix }}nginx
+spec:
+  rules:
+  - host: {{ index .Values.services "nginx" "environment" "APP_HOST" }}
+    http:
+      paths:
+      - backend:
+          serviceName: {{ .Values.resourcePrefix }}nginx
+          servicePort: 80
+status:
+  loadBalancer: {}
+{{ end }}

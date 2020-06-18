@@ -1,0 +1,107 @@
+attributes.default:
+  app:
+    # build - static|dynamic
+    #   dynamic - volumes are mounted and the build step is run once the containers have started
+    #   static  - app is copied into console, built, then the resulting build is copied into the web image
+    build: dynamic
+
+    # mode - development|production
+    #   development - additional tooling is made available and application is run in development mode
+    #   production  - leaner images with less tooling and application is run in production mode
+    mode: development
+
+    services: []
+
+    node_web_port: 3000
+
+  mutagen: no
+
+  jenkins:
+    credentials:
+      my127ws_key: = @('workspace.name') ~ '-my127ws-key'
+
+  pipeline:
+    base:
+      persistence: = @('persistence')
+      resourcePrefix: ~
+      hostname:  = @('pipeline.preview.hostname')
+    publish:
+      enabled: no
+      # when enabled the application helm chart will be published
+      # to the given git repository.
+      chart:
+        enabled: no
+        git:
+          # private key with write access to the repository
+          key: ~
+          # eg. git@github.com:organisation/project.git
+          repository: ~
+          # path within the repository to place the chart, no leading or trailing slashes
+          # note: an additional directory with the branch name will be created
+          path: = 'build-artifacts/' ~ @('workspace.name')
+          # sets the git user.email before pushing the commit
+          email: name@example.com
+    preview:
+      enabled: no
+      environment: ~
+      cluster:
+        name: null
+      namespace: = @('workspace.name') ~ '-' ~ slugify(branch())
+      hostname:  = @('pipeline.preview.namespace') ~ '.example.com'
+    qa:
+      enabled: no
+      environment: ~
+      branch: develop
+      cluster:
+        name: null
+      namespace: = @('workspace.name') ~ '-' ~ 'qa'
+      hostname: = @('pipeline.qa.namespace') ~ '.example.com'
+      resourcePrefix: ~
+      persistence: ~
+
+  docker:
+    repository: = @("workspace.name")
+    compose:
+      file_version: '3'
+    config: null
+    image:
+      node: = 'node:' ~ @('node.version') ~ '-slim'
+      nginx: nginx:1.17-alpine
+
+  backend:
+    path: /app
+    build:
+      when: 'true'
+      steps: []
+    start_dev:
+      steps:
+        - passthru "yarn install"
+        - yarn dev
+  frontend:
+    path: /app
+    build:
+      when: 'true'
+      steps:
+        - passthru "yarn install"
+        - passthru "yarn build"
+
+  git:
+    main_branch: develop
+
+  node:
+    version: 12
+
+  domain: my127.site
+  hostname: = @('namespace') ~ '.' ~ @('domain')
+  hostname_aliases: []
+
+  helm:
+    timeout: 300
+
+  resources:
+    cpu:
+      requests: []
+      limits: []
+    memory:
+      nginx: "100Mi"
+      node: "1024Mi"

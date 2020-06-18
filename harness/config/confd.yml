@@ -1,0 +1,21 @@
+
+confd('harness:/'):
+  # base templates
+  - { src: docker/image/node/Dockerfile }
+  - { src: docker/image/node/root/lib/task/build/frontend.sh }
+  - { src: docker/image/node/root/lib/task/build/backend.sh }
+  - { src: docker/image/node/root/lib/task/start/dev.sh }
+  - { src: docker/image/node/Dockerfile }
+  - { src: docker/image/nginx/Dockerfile }
+  - { src: application/overlay/Jenkinsfile }
+  - { src: application/overlay/.dockerignore, dst: workspace:/.dockerignore }
+  - { src: application/skeleton/README.md }
+  - { src: docker-compose.yml, dst: workspace:/docker-compose.yml }
+  - { src: mutagen.yml, dst: workspace:/mutagen.yml }
+  - { src: helm/app/values.yaml }
+  - { src: helm/app/values-production.yaml }
+  - { src: helm/app/values-preview.yaml }
+  - { src: helm/app/Chart.yaml }
+  - { src: helm/qa/requirements.yaml }
+  - { src: helm/qa/values.yaml }
+  - { src: helm/qa/Chart.yaml }

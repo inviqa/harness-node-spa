@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.resourcePrefix }}nginx
+  labels:
+    app.service: {{ .Values.resourcePrefix }}nginx
+  annotations:
+    argocd.argoproj.io/sync-wave: "15"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app.service: {{ .Values.resourcePrefix }}nginx
+  template:
+    metadata:
+      labels:
+        app.service: {{ .Values.resourcePrefix }}nginx
+    spec:
+      containers:
+      - name: nginx
+        env:
+        {{- range $key, $value := .Values.services.nginx.environment }}
+        {{- $tp := typeOf $value }}
+        - name: {{ $key | quote }}
+        {{- if eq $tp "string" }}
+          value: {{ tpl $value $ | quote }}
+        {{- else}}
+          value: {{ $value | quote }}
+        {{- end }}
+        {{- end }}
+        image: {{ .Values.docker.image.nginx }}
+        imagePullPolicy: Always
+        ports:
+        - name: http
+          containerPort: 80
+        resources:
+          limits:
+            memory: {{ .Values.resources.memory.nginx }}
+          requests:
+            memory: {{ .Values.resources.memory.nginx }}
+        readinessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+      imagePullSecrets:
+      - name: {{ .Values.resourcePrefix }}docker-config
+      restartPolicy: Always
+      enableServiceLinks: false
+status: {}

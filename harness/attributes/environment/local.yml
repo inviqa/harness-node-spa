@@ -1,0 +1,4 @@
+attributes:
+  app:
+    build: dynamic
+    version: develop

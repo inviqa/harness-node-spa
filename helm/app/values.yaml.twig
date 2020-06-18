@@ -1,0 +1,20 @@
+docker:
+  config: {{ @('docker.config') }}
+  image:
+    nginx: {{ @('docker.repository') ~ ':' ~ @('app.version') ~ '-nginx' }}
+
+services:
+{{ deep_merge_to_yaml([@('services'), @('pipeline.base.services')], 2, 2) | raw }}
+
+resources:
+{{ to_nice_yaml(@('resources'), 2, 2) | raw }}
+
+prometheus:
+{{ to_nice_yaml(@('pipeline.base.prometheus'), 2, 2) | raw }}
+
+resourcePrefix: {{ @('pipeline.base.resourcePrefix') | json_encode | raw }}
+
+ingress:
+{{ to_nice_yaml(@('pipeline.base.ingress'), 2, 2) | raw }}
+istio:
+{{ to_nice_yaml(@('pipeline.base.istio'), 2, 2) | raw }}
