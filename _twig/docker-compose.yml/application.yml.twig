@@ -45,7 +45,9 @@
 
 {% if @('app.build') == 'static' %}
   nginx:
-    build: .my127ws/docker/image/nginx
+    build:
+      context: .
+      dockerfile: .my127ws/docker/image/nginx/Dockerfile
     image: {{ @('docker.repository') ~ ':' ~ @('app.version') ~ '-nginx' }}
     labels:
       - traefik.backend={{ @('workspace.name') }}

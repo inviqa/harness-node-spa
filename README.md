@@ -36,3 +36,18 @@ It is expected that the packages.json defines the following scripts as tasks:
 * `test:ci` - run tests. `test` is not used as it's handy for developemnt to combine `lint` into `test`, but in CI these are run in parallel
 
 It is also expected to use `yarn` rather than `npm` (but this can be changed)
+
+A config.jq resides in the project root directory, which should be used to pass in
+environment-specific environment variables at runtime in pipeline environments. This gets
+injected as a replacement for %CONFIG% in the index.html.
+
+Note, no sensitive values should be inserted, as it will render to visitors of the site.
+
+A recommended way to use this in React is in public/index.html:
+
+<div id="root" data-config='%CONFIG%'></div>
+
+That way you can easily look it up from the element React is attaching to.
+
+It can alternatively be stored as a JS global variable in a <script> block,
+but it's a good idea to avoid in-line scripts altogether.

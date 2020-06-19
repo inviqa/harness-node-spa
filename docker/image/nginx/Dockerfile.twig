@@ -1,5 +1,11 @@
 FROM {{ @('docker.repository') ~ ':' ~ @('app.version') }}-node as node
 
 FROM {{ @('docker.image.nginx') }} as nginx
+RUN apk add --no-cache jq
 
+COPY .my127ws/docker/image/nginx/root/ /
+COPY config.jq /root/
 COPY --from=node --chown=root:root {{ @('app.dist_path') }} /usr/share/nginx/html
+
+ENTRYPOINT [ "/docker-entrypoint.sh" ]
+CMD ["nginx", "-g", "daemon off;"]
