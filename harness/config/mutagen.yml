@@ -6,7 +6,7 @@ command('mutagen (start|stop|pause|resume)'):
     #!bash(workspace:/)
     source .my127ws/harness/scripts/mutagen.sh "$COMMAND"
 
-command('switch (mutagen)'):
+command('switch (cached-volumes|delegated-volumes|mutagen)'):
   env:
     SYNC: = input.command(2)
     NAMESPACE: = @('namespace')
@@ -14,8 +14,13 @@ command('switch (mutagen)'):
     #!bash(workspace:/)|=
     run ws disable
     if [[ "$SYNC" = "mutagen" ]]; then
+      ws set delegated-volumes no
       ws set mutagen yes
+    elif [[ "$SYNC" = "delegated-volumes" ]]
+      ws set delegated-volumes yes
+      ws set mutagen no
     else
+      ws set delegated-volumes no
       ws set mutagen no
     fi
     run ws harness prepare

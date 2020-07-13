@@ -13,7 +13,7 @@
     command: ["app", "start:dev"]
     stdin_open: true # react-scripts start terminates if stdin closed
     volumes:
-      - {{ (syncvolume) ? @('workspace.name') ~ '-sync:/app:nocopy' : './:/app:delegated' }}
+      - {{ (syncvolume) ? @('workspace.name') ~ '-sync:/app:nocopy' : ('./:/app' ~ @('docker.compose.host_volume_options')) }}
       - ./.my127ws/application:/home/node/application
       - ./.my127ws/docker/image/node/root/lib/task:/lib/task
       - ./.my127ws:/.my127ws
