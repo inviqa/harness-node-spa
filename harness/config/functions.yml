@@ -36,6 +36,17 @@ function('deep_merge_to_yaml', [arrays, indentation, nesting]): |
   $text = $deepMerge($arrays);
   = preg_replace('/^/m', str_repeat(' ', $nesting ?: 2), \Symfony\Component\Yaml\Yaml::dump($text, 100, $indentation ?: 2));
 
+function('publishable_services', [services]): |
+  #!php
+  $pushServices = array_map(
+    function ($serviceName, $service) {
+      return ($service['publish'] ?? false) ? $serviceName : null;
+    },
+    array_keys($services),
+    $services
+  );
+  = join(' ', array_filter($pushServices));
+
 function('get_docker_external_networks'): |
   #!php
   $configRaw = shell_exec('docker-compose config');
