@@ -10,8 +10,8 @@ confd('harness:/'):
   - { src: application/overlay/Jenkinsfile }
   - { src: application/overlay/.dockerignore, dst: workspace:/.dockerignore }
   - { src: application/skeleton/README.md }
-  - { src: docker-compose.yml, dst: workspace:/docker-compose.yml }
   - { src: mutagen.yml, dst: workspace:/mutagen.yml }
+  - { src: docker-compose.yml, dst: workspace:/docker-compose.yml }
   - { src: helm/app/values.yaml }
   - { src: helm/app/values-production.yaml }
   - { src: helm/app/values-preview.yaml }
