@@ -6,6 +6,7 @@ attributes:
         APP_NAME: = @('workspace.name')
         APP_HOST: = @('hostname')
     nginx:
+      publish: true
       ingress:
         annotations: {}
       environment:
