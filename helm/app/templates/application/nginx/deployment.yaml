@@ -44,8 +44,10 @@ spec:
             port: 80
           initialDelaySeconds: 5
           periodSeconds: 10
+{{- if .Values.docker.image_pull_config }}
       imagePullSecrets:
-      - name: {{ .Values.resourcePrefix }}docker-config
+      - name: {{ .Values.resourcePrefix }}image-pull-config
+{{- end }}
       restartPolicy: Always
       enableServiceLinks: false
 status: {}

@@ -61,12 +61,15 @@ attributes.default:
       persistence: ~
 
   docker:
-    registry_url: = get_docker_registry(@('docker.repository'))
-    repository: = @("workspace.name")
+    config: null # deprecated
+    # If using gitops helm chart repositories, it's recommended to put this configuration
+    # in the values.yml in there now instead of project application repositories
+    image_pull_config: = @('docker.config')
     compose:
       file_version: '3'
       host_volume_options: "= ':' ~ (@('delegated-volumes') ? 'delegated' : 'cached')"
-    config: null
+    registry_url: = get_docker_registry(@('docker.repository'))
+    repository: = @("workspace.name")
     image:
       node: = 'node:' ~ @('node.version') ~ '-slim'
       nginx: nginx:1.17-alpine
@@ -99,7 +102,18 @@ attributes.default:
   hostname_aliases: []
 
   helm:
+    additional_schema_locations: https://inviqa.github.io/kubernetes-json-schema/schema
+    feature:
+      # Note: be very careful considering disabling this, as in most cases
+      # it causes the secrets in it to be stored plaintext on filesystem
+      # or in helm chart repositories
+      # requires sealed-secrets k8s operator
+      sealed_secrets: true
     timeout: 300
+
+    sealed_secrets:
+      controller_name: sealed-secrets
+      controller_namespace: sealed-secrets
 
   resources:
     cpu:
