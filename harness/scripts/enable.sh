@@ -12,7 +12,7 @@ main()
 
     else
         passthru docker-compose up -d
-        passthru docker-compose exec -T -u build node app welcome
+        passthru docker-compose exec -T -u node node app welcome
     fi
 
     if [[ "$APP_BUILD" = "dynamic" && "$USE_MUTAGEN" = "yes" ]]; then

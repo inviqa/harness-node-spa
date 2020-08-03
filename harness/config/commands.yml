@@ -81,7 +81,7 @@ command('frontend build'):
     COMPOSE_PROJECT_NAME: = @('namespace')
   exec: |
     #!bash(workspace:/)|@
-    passthru "docker-compose exec -u build node bash -i -c 'app build:frontend'"
+    passthru "docker-compose exec -u node node bash -i -c 'app build:frontend'"
 
 command('port <service>'):
   env:
