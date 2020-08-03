@@ -1,6 +1,8 @@
 {
   "name": "sample-dynamic",
   "scripts": {
+    "start:dev": "while true; do sleep 10000; done",
+    "start": "while true; do sleep 10000; done",
     "build": "exit 0",
     "test": "exit 0"
   }
