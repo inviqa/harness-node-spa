@@ -1,0 +1,155 @@
+#!/bin/bash
+
+set -e
+set -x
+
+export path_test="./.tmp-test"
+
+function main()
+{
+    test "$1" "$2" "${3:-}"
+}
+
+function test()
+(
+    local harness="$1"
+    local mode="$2"
+    local sync="$3"
+
+    if [[ "$mode" == "static" ]]; then
+      export MY127WS_ENV=pipeline
+    fi
+
+    # Test default mode of static or dynamic harnesses
+    # For dynamic this means a mountpoint for the application code
+    # or mutagen, or docker-sync
+    setup "$harness" "$mode"
+    if [[ "$sync" == "" ]]; then
+      setup_dynamic_mountpoint
+    elif [[ "$sync" == "mutagen" ]]; then
+      setup_dynamic_mutagen
+    fi
+    install_environment
+    check_environment_started "$harness" "$mode"
+    run_pipeline_tests "$harness"
+    restart_environment
+    check_environment_started "$harness" "$mode"
+    if [[ "$sync" != "" ]]; then
+      wait_for_vendor_directory
+    fi
+    teardown
+)
+
+function setup()
+(
+    local harness="$1"
+    local mode="$2"
+
+    #local path_harness="./dist/harness-${harness}"
+    # only one harness at the moment
+    local path_harness="."
+
+    if [ -d "${path_test}" ]; then
+        rm -rf "${path_test}"
+    fi
+
+    cp -ap "${path_harness}/.ci/sample-${mode}" "${path_test}"
+    mkdir "${path_test}/.my127ws"
+    cp -ap "${path_harness}/"* "${path_test}/.my127ws/"
+)
+
+function install_environment()
+(
+    cd "${path_test}"
+    ws install
+)
+
+function check_environment_started()
+(
+    local harness="$1"
+    local mode="$2"
+
+    cd "${path_test}"
+
+    if [ "$(docker-compose -p "ci-${harness}-sample-${mode}" ps | grep -c Exit)" -gt 0 ]; then
+      echo 'Some containers failed to start'
+      docker-compose -p "ci-${harness}-sample-${mode}" ps
+      return 1
+    fi
+)
+
+function run_pipeline_tests()
+(
+    local harness="$1"
+    cd "${path_test}"
+
+    ws helm kubeval qa
+)
+
+function restart_environment()
+(
+    cd "${path_test}"
+    ws disable
+    ws enable
+)
+
+function setup_dynamic_mountpoint()
+(
+    cd "${path_test}"
+    echo "attribute('host.os'): linux" > workspace.override.yml
+)
+
+function setup_dynamic_docker_sync()
+(
+    cd "${path_test}"
+    echo "attribute('host.os'): darwin" > workspace.override.yml
+    echo "attribute('docker-sync'): yes" >> workspace.override.yml
+    echo "attribute('mutagen'): no" >> workspace.override.yml
+)
+
+function setup_dynamic_mutagen()
+(
+    cd "${path_test}"
+    echo "attribute('host.os'): darwin" > workspace.override.yml
+    echo "attribute('docker-sync'): no" >> workspace.override.yml
+    echo "attribute('mutagen'): yes" >> workspace.override.yml
+)
+
+function wait_for_vendor_directory()
+(
+    set +x
+    cd "${path_test}"
+    if [ ! -f composer.json ]; then
+        return 0
+    fi
+    local timer=600
+    while [ $timer -gt 0 ]; do
+      if [ -d vendor ]; then
+          echo "Found vendor directory, sync worked"
+          return 0
+      fi
+      timer=$(( timer - 1 ))
+      sleep 1
+    done
+    echo "vendor directory not found within 600 seconds, sync failed"
+    ls -la
+    return 1
+)
+
+function teardown()
+(
+    cd "${path_test}"
+    ws destroy
+    rm -rf .my127ws
+)
+
+function clean()
+{
+    if [ -d "$path_test" ]; then
+        (cd "$path_test" && ws destroy)
+        rm -rf "$path_test"
+    fi
+}
+
+trap 'clean' EXIT
+main "$@"
