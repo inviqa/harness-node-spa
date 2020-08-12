@@ -35,7 +35,7 @@ dynamic()
     passthru docker-compose up -d
 
     if [ ! -f package.json ]; then
-        task "skeleton:apply"
+        task skeleton:apply
     fi
     passthru docker-compose exec -T node app init
 }

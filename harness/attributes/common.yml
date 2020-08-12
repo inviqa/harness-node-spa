@@ -83,15 +83,15 @@ attributes.default:
       steps: []
     start_dev:
       steps:
-        - passthru "yarn install"
+        - passthru yarn install
         - yarn dev
   frontend:
     path: /app
     build:
       when: 'true'
       steps:
-        - passthru "yarn install"
-        - passthru "yarn build"
+        - passthru yarn install
+        - passthru yarn build
 
   git:
     main_branch: develop

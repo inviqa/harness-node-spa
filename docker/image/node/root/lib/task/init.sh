@@ -3,10 +3,10 @@
 function task_init()
 {
     if [ ! -f /app/README.md ]; then
-        task "skeleton:apply"
+        task skeleton:apply
     fi
 
-    task "overlay:apply"
+    task overlay:apply
 
-    task "welcome"
+    task welcome
 }
