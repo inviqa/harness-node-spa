@@ -7,8 +7,6 @@ attributes:
         APP_HOST: = @('hostname')
     nginx:
       publish: true
-      ingress:
-        annotations: {}
       environment:
         APP_HOST: = @('hostname')
   pipeline:
@@ -17,6 +15,8 @@ attributes:
         podMonitoring: false
       services:
         nginx:
+          ingress:
+            annotations: {}
           metricsEnabled: false
           metricsEndpoints:
             - port: http

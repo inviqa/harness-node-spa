@@ -29,6 +29,11 @@ spec:
           value: {{ $value | quote }}
         {{- end }}
         {{- end }}
+        {{- if .Values.services.nginx.environment_secrets }}
+        envFrom:
+          - secretRef:
+              name: {{ .Values.resourcePrefix }}nginx
+        {{- end }}
         image: {{ .Values.docker.image.nginx }}
         imagePullPolicy: Always
         ports:

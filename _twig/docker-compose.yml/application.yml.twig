@@ -39,9 +39,10 @@
     networks:
       - private
 {% endif %}
-    environment:
-{{ deep_merge_to_yaml([@('services.node.environment'), @('services.node.environment')], 2, 6) | raw }}
-
+    environment: {{ to_nice_yaml(deep_merge([
+        @('services.node.environment'),
+        @('services.node.environment_secrets')
+      ]), 2, 6) | raw }}
 
 {% if @('app.build') == 'static' %}
   nginx:
@@ -55,8 +56,10 @@
       - traefik.docker.network=my127ws
       - traefik.port=80
 {% if @('services.nginx.environment') %}
-    environment:
-{{ to_nice_yaml(@('services.nginx.environment'), 2, 6) | raw }}
+    environment: {{ to_nice_yaml(deep_merge([
+        @('services.nginx.environment'),
+        @('services.nginx.environment_secrets')
+      ]), 2, 6) | raw }}
 {% endif %}
     networks:
       private:
