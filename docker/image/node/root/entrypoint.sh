@@ -20,7 +20,7 @@ bootstrap()
 bootstrap
 
 if [ "$#" -gt 0 ]; then
-    exec "$@"
+    exec /sbin/docker-init su node "${@:1}"
 else
     sleep infinity
 fi
