@@ -19,8 +19,8 @@ bootstrap()
 
 bootstrap
 
-if [ "$#" -gt 0 ]; then
-    exec /sbin/docker-init su node "${@:1}"
+if [ "${1:-}" == "sleep" ]; then
+    "$@"
 else
-    sleep infinity
+    exec /sbin/docker-init su -- node "${@:1}"
 fi

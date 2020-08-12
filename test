@@ -146,7 +146,9 @@ function teardown()
 function clean()
 {
     if [ -d "$path_test" ]; then
-        (cd "$path_test" && ws destroy)
+        if [ -d "$path_test/.my127ws" ]; then
+            (cd "$path_test" && ws destroy)
+        fi
         rm -rf "$path_test"
     fi
 }
