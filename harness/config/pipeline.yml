@@ -3,6 +3,7 @@ command('app build'):
     COMPOSE_PROJECT_NAME: = @('namespace')
   exec: |
     #!bash(workspace:/)|@
+    ws external-images pull
     passthru docker-compose build node
     passthru docker-compose build nginx # nginx needs dist built from node
 
