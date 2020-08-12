@@ -50,9 +50,9 @@ command('exec %'):
   exec: |
     #!bash(workspace:/)|=
     if [ -t 0 ] && [ -t 1 ] ; then
-      docker-compose exec node ={ input.argument('%') }
+      docker-compose exec node -u node ={ input.argument('%') }
     else
-      docker-compose exec -T node ={ input.argument('%') }
+      docker-compose exec -T node -u node ={ input.argument('%') }
     fi
 
 command('logs %'):
@@ -81,7 +81,7 @@ command('frontend build'):
     COMPOSE_PROJECT_NAME: = @('namespace')
   exec: |
     #!bash(workspace:/)|@
-    passthru "docker-compose exec -u build node bash -i -c 'app build:frontend'"
+    passthru "docker-compose exec -u node node bash -i -c 'app build:frontend'"
 
 command('port <service>'):
   env:
