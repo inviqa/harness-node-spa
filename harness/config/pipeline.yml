@@ -3,6 +3,7 @@ command('app build'):
     COMPOSE_PROJECT_NAME: = @('namespace')
   exec: |
     #!bash(workspace:/)|@
+    ws external-images pull
     passthru docker-compose build node
     passthru docker-compose build nginx # nginx needs dist built from node
 
@@ -11,9 +12,9 @@ command('app publish'):
     COMPOSE_PROJECT_NAME: = @('namespace')
   exec: |
     #!bash(workspace:/)|@
-    echo "@('docker.password')" | run docker login --username="@('docker.username')" --password-stdin @('docker.registry_url')
-    passthru docker-compose push @('pipeline.publish.services')
-    run docker logout @('docker.registry_url')
+    echo "@('docker.registry.password')" | run docker login --username="@('docker.registry.username')" --password-stdin @('docker.registry.url')
+    run docker-compose push @('pipeline.publish.services')
+    run docker logout @('docker.registry.url')
 
 command('app publish chart <release> <message>'):
   env:

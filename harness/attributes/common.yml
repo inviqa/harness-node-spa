@@ -70,7 +70,10 @@ attributes.default:
     compose:
       file_version: '3'
       host_volume_options: "= ':' ~ (@('delegated-volumes') ? 'delegated' : 'cached')"
-    registry_url: = get_docker_registry(@('docker.repository'))
+    registry:
+      url: = get_docker_registry(@('docker.repository'))
+      username: = @('docker.username') # for backwards compatibility
+      password: = @('docker.password') # for backwards compatibility
     repository: = @("workspace.name")
     image:
       node: = 'node:' ~ @('node.version') ~ '-slim'
@@ -83,15 +86,15 @@ attributes.default:
       steps: []
     start_dev:
       steps:
-        - passthru "yarn install"
+        - passthru yarn install
         - yarn dev
   frontend:
     path: /app
     build:
       when: 'true'
       steps:
-        - passthru "yarn install"
-        - passthru "yarn build"
+        - passthru yarn install
+        - passthru yarn build
 
   git:
     main_branch: develop

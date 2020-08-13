@@ -30,12 +30,12 @@ dynamic()
         passthru ws mutagen pause
     fi
 
-    passthru docker-compose pull
-    passthru docker-compose build --pull
+    ws external-images pull
+    passthru docker-compose build
     passthru docker-compose up -d
 
     if [ ! -f package.json ]; then
-        task "skeleton:apply"
+        task skeleton:apply
     fi
     passthru docker-compose exec -T node app init
 }
