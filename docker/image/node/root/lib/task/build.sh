@@ -2,6 +2,6 @@
 
 function task_build()
 {
-    task "build:backend"
-    task "build:frontend"
+    task build:backend
+    task build:frontend
 }
