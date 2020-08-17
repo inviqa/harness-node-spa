@@ -22,5 +22,5 @@ bootstrap
 if [ "${1:-}" == "sleep" ]; then
     "$@"
 else
-    exec /sbin/docker-init su -- node "${@:1}"
+    exec /sbin/docker-init su -- node -c "$(printf "%q " "${@:1}")"
 fi
