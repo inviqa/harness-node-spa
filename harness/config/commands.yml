@@ -50,9 +50,9 @@ command('exec %'):
   exec: |
     #!bash(workspace:/)|=
     if [ -t 0 ] && [ -t 1 ] ; then
-      docker-compose exec node -u node ={ input.argument('%') }
+      docker-compose exec -u node node ={ input.argument('%') }
     else
-      docker-compose exec -T node -u node ={ input.argument('%') }
+      docker-compose exec -T -u node node ={ input.argument('%') }
     fi
 
 command('logs %'):
