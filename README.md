@@ -48,7 +48,7 @@ the site.
 A recommended way to use this in React is in `public/index.html`:
 
 ```html
-<div id="root" data-config='%CONFIG%'></div>
+<div id="root" data-config="%CONFIG%"></div>
 ```
 
 That way you can easily look it up from the element React is attaching to.
