@@ -13,6 +13,7 @@ attributes.default:
     services: []
 
     node_web_port: 3000
+    web_directory: /usr/share/nginx/html
 
   delegated-volumes: no
   mutagen: no
@@ -98,6 +99,14 @@ attributes.default:
 
   git:
     main_branch: develop
+
+  nginx:
+    # used to set site specific configurations under server directive
+    site:
+      conf: []
+    # used to set nginx global configurations under http directive
+    global:
+      conf: []
 
   node:
     version: 12
