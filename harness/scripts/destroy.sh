@@ -7,8 +7,6 @@ if [[ "$USE_MUTAGEN" = "yes" ]]; then
   passthru ws mutagen rm
 fi
 
-if [[ "$APP_BUILD" = "static" ]]; then
-    run "docker images --filter=reference='${DOCKER_REPOSITORY}:${APP_VERSION}-*' -q | xargs --no-run-if-empty docker image rm --force"
-fi
+ws cleanup built-images
 
 run rm -f .my127ws/.flag-built

@@ -1,4 +1,5 @@
 FROM {{ @('docker.repository') ~ ':' ~ @('app.version') }}-node as node
+LABEL build="{{ @('namespace') ~ ':' ~ @('app.version') }}"
 
 FROM {{ @('docker.image.nginx') }} as nginx
 RUN apk add --no-cache jq
