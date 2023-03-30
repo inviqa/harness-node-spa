@@ -6,7 +6,7 @@ pipeline {
     options {
         buildDiscarder(logRotator(daysToKeepStr: '30'))
     }
-    triggers { cron(env.BRANCH_NAME ==~ /^\d+\.\d+\.x$/ ? 'H H(0-6) * * *' : '') }
+    triggers { cron(env.BRANCH_NAME ==~ /^\d+\.\d+\.x$/ ? 'H H(2-6) * * 1' : '') }
     stages {
         stage('BuildAndTest') {
             matrix {
