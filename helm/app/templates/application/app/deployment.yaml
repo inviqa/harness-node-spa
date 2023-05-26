@@ -1,0 +1,73 @@
+{{- with .Values.services.app -}}
+{{- if .enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $.Release.Name }}-app
+  labels:
+    {{- include "chart.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: app
+    app.service: {{ $.Release.Name }}-app
+  annotations:
+    argocd.argoproj.io/sync-wave: "15"
+spec:
+  {{- with (pick . "replicas") }}
+  {{- . | toYaml | nindent 2 }}
+  {{- end }}
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app.service: {{ $.Release.Name }}-app
+  template:
+    metadata:
+      labels:
+        {{- include "chart.selectors" $ | nindent 8 }}
+        app.kubernetes.io/component: app
+        app.service: {{ $.Release.Name }}-app
+    spec:
+      containers:
+      - name: app
+        env:
+        {{- range $key, $value := .environment }}
+        - name: {{ $key | quote }}
+        {{- if kindIs "string" $value }}
+          value: {{ tpl $value $ | quote }}
+        {{- else if kindIs "map" $value }}
+          {{ tpl ($value | toYaml) $ | nindent 10 }}
+        {{- else }}
+          value: {{ $value | quote }}
+        {{- end }}
+        {{- end }}
+        {{- if .environment_secrets }}
+        envFrom:
+          {{- if .environment_secrets }}
+          - secretRef:
+              name: {{ $.Release.Name }}-console
+          {{- end }}
+          {{- with .envFrom }}
+          {{- tpl (. | toYaml) $ | nindent 10 }}
+          {{- end }}
+        {{- end }}
+        image: {{ .image }}
+        imagePullPolicy: Always
+        ports:
+          - name: http
+            containerPort: 80
+        resources:
+          limits:
+            memory: {{ .resources.memory }}
+          requests:
+            memory: {{ .resources.memory }}
+        readinessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+{{- if $.Values.docker.image_pull_config }}
+      imagePullSecrets:
+      - name: {{ $.Release.Name }}-image-pull-config
+{{- end }}
+      restartPolicy: Always
+      enableServiceLinks: false
+{{- end }}
+{{- end }}

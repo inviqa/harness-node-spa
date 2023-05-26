@@ -1,8 +1,0 @@
-
-{% if @('pipeline.production.services') %}
-services: {{ to_nice_yaml(@('pipeline.production.services'), 2, 2) | raw }}  
-{% endif %}
-
- {% if @('pipeline.production.resources') %}
-resources: {{ to_nice_yaml(@('pipeline.production.resources'), 2, 2) | raw }}
-{% endif %}

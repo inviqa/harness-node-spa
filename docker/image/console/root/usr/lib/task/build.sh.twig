@@ -1,0 +1,16 @@
+#!/bin/bash
+
+function task_build()
+{
+    set -o errexit
+    set -o nounset
+    set -o pipefail
+
+    if ! [ -f /app/README.md ]; then
+        task skeleton:apply
+    fi
+
+    task overlay:apply
+
+    # tasks.build steps removed as build happens in app service. Console only here for ws create and harness upgrades
+}

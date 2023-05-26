@@ -3,7 +3,7 @@
   "scripts": {
     "dev": "while true; do sleep 10000; done",
     "start": "while true; do sleep 10000; done",
-    "build": "exit 0",
+    "build": "mkdir build && echo 'hello world' > build/index.html",
     "test": "exit 0"
   }
 }

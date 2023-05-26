@@ -1,0 +1,17 @@
+{{- with .Values.services.app -}}
+{{- if .enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $.Release.Name }}-app
+  labels:
+    app.service: {{ $.Release.Name }}-app
+spec:
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+  selector:
+    app.service: {{ $.Release.Name }}-app
+{{- end }}
+{{- end }}
