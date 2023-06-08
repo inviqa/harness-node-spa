@@ -6,7 +6,7 @@ attributes.default:
       build:
         from:
           node: = 'node:' ~ @('node.version') ~ '-slim'
-          nginx: nginx:1.21-alpine
+          nginx: nginx:1.25-alpine3.17
       environment:
         HOST_OS_FAMILY: = @('host.os')
       resources:
