@@ -11,7 +11,7 @@ pipeline {
         stage('BuildAndTest') {
             parallel {
                 stage('Test (mode=static)') {
-                    agent { label "my127ws" }
+                    agent { label "linux-amd64-preview" }
                     steps { sh './.ci/test static' }
                     post {
                         always {
@@ -20,7 +20,7 @@ pipeline {
                     }
                 }
                 stage('Test (mode=dynamic)') {
-                    agent { label "my127ws" }
+                    agent { label "linux-amd64-preview" }
                     steps { sh './.ci/test dynamic' }
                     post {
                         always {
@@ -29,7 +29,7 @@ pipeline {
                     }
                 }
                 stage('Test (mode=dynamic, sync=mutagen)') {
-                    agent { label "my127ws" }
+                    agent { label "linux-amd64-preview" }
                     steps { sh './.ci/test dynamic mutagen' }
                     post {
                         always {
