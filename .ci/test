@@ -48,7 +48,7 @@ function main()
       test_harness_acceptance "$mode" "$sync"
     fi
     if [[ "$TEARDOWN_ENVIRONMENT" == "yes" ]]; then
-      teardown
+      clean
     fi
 }
 
@@ -150,17 +150,13 @@ function setup_dynamic_mutagen()
     echo "attribute('mutagen'): yes" >> workspace.override.yml
 )
 
-function teardown()
-(
-    cd "${path_test}"
-    ws destroy || (docker ps -a && return 1)
-    rm -rf .my127ws
-)
-
 function clean()
 {
-    if [ -d "$path_test" ]; then
+    if [ -d "${path_test}/.my127ws" ]; then
         (cd "$path_test" && ws destroy) || (docker ps -a && return 1)
+    fi
+
+    if [ -d "$path_test" ]; then
         rm -rf "$path_test"
     fi
 }
