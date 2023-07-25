@@ -12,6 +12,7 @@ attributes.default:
         - "= @('app.build') == 'static' ? 'yarn build' : ''"
     start_dev:
       steps:
+        - passthru yarn install
         - yarn dev
 
   nginx:
