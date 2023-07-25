@@ -1,10 +1,6 @@
 workspace('ci-node-spa-sample-dynamic'):
   description: generated local workspace for ci-node-spa-sample.
-  harness: inviqa/node-spa
+  harnessLayers:
+    - https://github.com/inviqa/harness-docker/archive/refs/tags/0.2.0-alpha1.tar.gz
 
 attribute('app.build'): dynamic
-
-attribute('aws.bucket'): null
-attribute('app.repository'): null
-attribute('aws.id'): null
-attribute('aws.key'): null

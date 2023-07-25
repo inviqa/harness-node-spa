@@ -1,0 +1,17 @@
+attributes.default:
+  app:
+    node_web_port: 3000
+    web_directory: /usr/share/nginx/html
+
+  tasks:
+    build:
+      when: 'true'
+      steps:
+        - passthru yarn install
+        - "= @('app.build') == 'static' ? 'yarn build' : ''"
+    start_dev:
+      steps:
+        - yarn dev
+
+  node:
+    version: 16

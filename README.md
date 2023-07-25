@@ -13,7 +13,7 @@ git commit -m "Initial commit"
 ```
 1. Store the `workspace.override.yml` contents in a suitable location (such as LastPass).
 
-[Workspace]: https://github.com/my127/workspace
+[Workspace]: https://github.com/my127/workspace v0.3.1+
 
 
 This harness is currently unopinionated, in that it doesn't set up an initial packages.json,
@@ -21,10 +21,22 @@ nor currently linting configuration. Some of this may change in the future thoug
 
 Once `ws create` has exited, it will be expected to fail to start due to there being no packages.json.
 
+While workspace v0.3 doesn't support parent harnesses, using it you will also need to edit `workspace.yml` to add the docker harness layer:
+
+```patch
+ workspace('...'):
+   description: generated local workspace for ...
+   harnessLayers:
++    - inviqa/docker:v0.2.0
+     - inviqa/node-spa:v0.2.0
+```
+
+Then run `ws install` to finish installation.
+
 You can use create-react-app to set up a React app:
 
 ```
-[docker-compose run --rm node] npx create-react-app .
+[docker-compose run --rm app] npx create-react-app .
 ws enable
 ```
 

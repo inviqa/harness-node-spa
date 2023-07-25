@@ -1,0 +1,40 @@
+{% set syncvolume = false %}
+{% if @('host.os') == 'darwin' and @('mutagen') == 'yes' %}
+{% set syncvolume = true %}
+{% endif %}
+{% set hostnames = [@('hostname')] %}
+{% set hostnames = hostnames|merge(@('hostname_aliases')|map(alias => "#{alias}." ~ @('domain'))) %}
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: .my127ws/docker/image/app/Dockerfile
+{% if @('app.build') == 'dynamic' %}
+      target: node
+    command: ["app", "start:dev"]
+    stdin_open: true # react-scripts start terminates if stdin closed
+    volumes:
+      - {{ (syncvolume) ? @('workspace.name') ~ '-sync:/app:nocopy' : ('./:/app' ~ @('docker.compose.host_volume_options')) }}
+      - ./.my127ws/application:/home/node/application
+      - ./.my127ws/docker/image/app/root-node/usr/lib/task:/usr/lib/task
+      - ./.my127ws:/.my127ws
+{% else %}
+      target: nginx
+    image: {{ @('docker.repository') ~ ':' ~ @('app.version') ~ '-app' }}
+{% endif %}
+    labels:
+      - traefik.backend={{ @('workspace.name') }}
+      - traefik.frontend.rule=Host:{{ hostnames|join(',') }}
+      - traefik.docker.network=my127ws
+      - traefik.port={{ @('app.build') == 'static' ? '80' : @('app.node_web_port') }}
+    networks:
+      private:
+        aliases:
+{% for alias in hostnames %}
+          - {{ alias }}
+{% endfor %}
+      shared: {}
+    environment: {{ to_nice_yaml(deep_merge([
+        @('services.app.environment'),
+        @('services.app.environment_secrets')
+      ]), 2, 6) | raw }}

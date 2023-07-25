@@ -1,0 +1,26 @@
+attributes.default:
+  services:
+    app:
+      enabled: true
+      publish: = @('services.app.enabled')
+      build:
+        from:
+          node: = 'node:' ~ @('node.version') ~ '-slim'
+          nginx: nginx:1.25-alpine3.17
+      environment:
+        HOST_OS_FAMILY: = @('host.os')
+      resources:
+        memory: 64Mi
+    console:
+      enabled: = @('app.build') == 'dynamic'
+      publish: false
+  
+  pipeline:
+    base:
+      ingresses:
+        app:
+          # possible ingress types are standard, istio, or ~ for none
+          # note istio requires a cluster that has istio configured as the ingress controller
+          type: standard
+          hosts:
+            - = @('hostname')

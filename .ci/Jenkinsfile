@@ -1,0 +1,43 @@
+pipeline {
+    agent none
+    environment {
+        MY127WS_KEY = credentials('base-my127ws-key-20190523')
+    }
+    options {
+        buildDiscarder(logRotator(daysToKeepStr: '30'))
+    }
+    triggers { cron(env.BRANCH_NAME ==~ /^\d+\.\d+\.x$/ ? 'H H(2-6) * * 1' : '') }
+    stages {
+        stage('BuildAndTest') {
+            parallel {
+                stage('Test (mode=static)') {
+                    agent { label "linux-amd64-preview" }
+                    steps { sh './.ci/test static' }
+                    post {
+                        always {
+                            cleanWs()
+                        }
+                    }
+                }
+                stage('Test (mode=dynamic)') {
+                    agent { label "linux-amd64-preview" }
+                    steps { sh './.ci/test dynamic' }
+                    post {
+                        always {
+                            cleanWs()
+                        }
+                    }
+                }
+                stage('Test (mode=dynamic, sync=mutagen)') {
+                    agent { label "linux-amd64-preview" }
+                    steps { sh './.ci/test dynamic mutagen' }
+                    post {
+                        always {
+                            cleanWs()
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
