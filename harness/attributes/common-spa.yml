@@ -2,6 +2,7 @@ attributes.default:
   app:
     node_web_port: 3000
     web_directory: /usr/share/nginx/html
+    code_owner: node
 
   tasks:
     build:
@@ -11,6 +12,7 @@ attributes.default:
         - "= @('app.build') == 'static' ? 'yarn build' : ''"
     start_dev:
       steps:
+        - passthru yarn install
         - yarn dev
 
   nginx:
