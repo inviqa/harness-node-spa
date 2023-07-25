@@ -13,5 +13,14 @@ attributes.default:
       steps:
         - yarn dev
 
+  nginx:
+    # used to set site specific configurations under server directive
+    site:
+      conf: []
+    # used to set nginx global configurations under http directive
+    global:
+      conf:
+        server_tokens: 'off'
+
   node:
     version: 16
