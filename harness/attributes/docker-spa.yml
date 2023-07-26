@@ -12,7 +12,6 @@ attributes.default:
       resources:
         memory: 64Mi
     console:
-      enabled: = @('app.build') == 'dynamic'
       build:
         from: = 'node:' ~ @('node.version') ~ '-slim'
       publish: false
