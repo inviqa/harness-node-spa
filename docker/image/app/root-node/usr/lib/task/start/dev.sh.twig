@@ -2,7 +2,7 @@
 
 function task_start_dev()
 {
-    {% for step in @('tasks.start_dev.steps') -%}
+    {% for step in @('task.start_dev.steps') -%}
     {{ step|raw }}
     {% endfor %}
 }
