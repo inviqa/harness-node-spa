@@ -1,8 +1,6 @@
-{% if @('app.build') == 'dynamic' %}
-FROM {{ @('namespace') }}-console as node
-{% else %}
-FROM {{ @('docker.repository') ~ ':' ~ @('app.version') }}-console as node
-{% endif %}
+{% include 'docker/image/console/Dockerfile.twig' %}
+
+FROM console as node
 COPY .my127ws/docker/image/app/root-node /
 
 FROM {{ @('services.app.build.from.nginx') }} as nginx
