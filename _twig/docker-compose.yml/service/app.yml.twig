@@ -20,7 +20,7 @@ services:
       - ./.my127ws:/.my127ws
 {% else %}
       target: nginx
-    image: {{ @('docker.repository') ~ ':' ~ @('app.version') ~ '-app' }}
+    image: {{ @('services.app.image') }}
 {% endif %}
     labels:
       - traefik.backend={{ @('workspace.name') }}

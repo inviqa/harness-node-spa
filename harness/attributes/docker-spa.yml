@@ -2,6 +2,7 @@ attributes.default:
   services:
     app:
       enabled: true
+      image: = @('docker.repository') ~ ':' ~ @('app.version') ~ '-app'
       publish: = @('services.app.enabled')
       build:
         from:
