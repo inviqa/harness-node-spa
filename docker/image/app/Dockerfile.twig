@@ -1,30 +1,7 @@
-FROM {{ @('services.app.build.from.node') }} as node
-ARG TARGETARCH
+{% include 'docker/image/console/Dockerfile.twig' %}
 
+FROM console as node
 COPY .my127ws/docker/image/app/root-node /
-
-WORKDIR /app
-
-ENV APP_MODE={{ @('app.mode') }}
-
-{% if @('app.build') == 'dynamic' %}
-USER root
-
-ADD https://github.com/krallin/tini/releases/download/v0.19.0/tini-${TARGETARCH} /sbin/docker-init
-RUN chmod +x /sbin/docker-init
-
-VOLUME /app
-
-ENTRYPOINT ["/entrypoint.dynamic.sh"]
-{% else %}
-RUN chown node:node /app
-COPY --chown=node:node ./                    /app
-USER node
-RUN app build
-
-ENTRYPOINT ["/entrypoint.sh"]
-
-###
 
 FROM {{ @('services.app.build.from.nginx') }} as nginx
 
@@ -36,4 +13,3 @@ COPY --from=node --chown=root:root {{ @('app.dist_path') }} /usr/share/nginx/htm
 
 ENTRYPOINT [ "/docker-entrypoint.sh" ]
 CMD ["nginx", "-g", "daemon off;"]
-{% endif %}
