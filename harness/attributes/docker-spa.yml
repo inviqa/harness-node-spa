@@ -25,3 +25,6 @@ attributes.default:
           type: standard
           hosts:
             - = @('hostname')
+      services:
+        console:
+          enabled: false
