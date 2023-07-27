@@ -1,6 +1,6 @@
 workspace('ci-node-spa-sample-dynamic'):
   description: generated local workspace for ci-node-spa-sample.
   harnessLayers:
-    - https://github.com/inviqa/harness-docker/archive/refs/tags/0.2.0-alpha3.tar.gz
+    - https://github.com/inviqa/harness-docker/archive/refs/tags/0.2.0.tar.gz
 
 attribute('app.build'): dynamic

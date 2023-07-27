@@ -8,7 +8,7 @@ harness('inviqa/node-spa'):
     confd:
       - harness:/
   parentLayers:
-    - inviqa/docker:0.2.0-alpha3
+    - inviqa/docker:v0.2.0
 ---
 attributes:
   app:
