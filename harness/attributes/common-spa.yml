@@ -24,4 +24,4 @@ attributes.default:
         server_tokens: 'off'
 
   node:
-    version: 16
+    version: 20
