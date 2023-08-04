@@ -21,12 +21,11 @@ nor currently linting configuration. Some of this may change in the future thoug
 
 Once `ws create` has exited, it will be expected to fail to start due to there being no packages.json.
 
-You can use create-react-app to set up a React app, then build the project again:
+You can use create-react-app to set up a React app:
 
 ```
 [ws exec] yarn init
 [ws exec] npx create-react-app .
-ws enable
 ```
 
 It is expected that the packages.json defines the following scripts as tasks:
