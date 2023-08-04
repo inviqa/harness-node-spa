@@ -24,6 +24,7 @@ Once `ws create` has exited, it will be expected to fail to start due to there b
 You can use create-react-app to set up a React app, then build the project again:
 
 ```
+[ws exec] yarn init
 [ws exec] npx create-react-app .
 ws enable
 ```
