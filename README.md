@@ -24,9 +24,10 @@ Once `ws create` has exited, it will be expected to fail to start due to there b
 You can use create-react-app to set up a React app:
 
 ```
-[ws exec] yarn init
-[ws exec] npx create-react-app .
+[ws exec] npx create-react-app my-app
 ```
+
+create-react-app expects a clean directory, so it is required to install it into another directory then copy it into the project directory.
 
 It is expected that the packages.json defines the following scripts as tasks:
 
