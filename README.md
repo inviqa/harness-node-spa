@@ -27,6 +27,7 @@ Vite:
 ```
 [ws exec] yarn create vite
 ```
+create-vite expects a clean directory, so it is required to install it into another directory then move the contents it into the project directory.
 
 Parcel:
 ```
