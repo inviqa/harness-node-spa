@@ -12,6 +12,7 @@ services:
 {% if @('app.build') == 'dynamic' %}
       target: node
     command: ["app", "start:dev"]
+    entrypoint: [/entrypoint.dynamic.sh]
     stdin_open: true # react-scripts start terminates if stdin closed
     volumes:
       - {{ (syncvolume) ? @('workspace.name') ~ '-sync:/app:nocopy' : ('./:/app' ~ @('docker.compose.host_volume_options')) }}
