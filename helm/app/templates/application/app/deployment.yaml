@@ -27,27 +27,7 @@ spec:
     spec:
       containers:
       - name: app
-        env:
-        {{- range $key, $value := .environment }}
-        - name: {{ $key | quote }}
-        {{- if kindIs "string" $value }}
-          value: {{ tpl $value $ | quote }}
-        {{- else if kindIs "map" $value }}
-          {{ tpl ($value | toYaml) $ | nindent 10 }}
-        {{- else }}
-          value: {{ $value | quote }}
-        {{- end }}
-        {{- end }}
-        {{- if .environment_secrets }}
-        envFrom:
-          {{- if .environment_secrets }}
-          - secretRef:
-              name: {{ $.Release.Name }}-console
-          {{- end }}
-          {{- with .envFrom }}
-          {{- tpl (. | toYaml) $ | nindent 10 }}
-          {{- end }}
-        {{- end }}
+        {{- include "service.environment" (dict "root" $ "serviceName" "app" "service" .) | nindent 8 }}
         image: {{ .image }}
         imagePullPolicy: Always
         ports:
