@@ -6,7 +6,7 @@ setup_app_networking()
     if [ "${HOST_OS_FAMILY}" = "linux" ]; then
         DOCKER_INTERNAL_HOST="host.docker.internal"
         if ! grep $DOCKER_INTERNAL_HOST /etc/hosts > /dev/null ; then
-            DOCKER_INTERNAL_IP=$(/sbin/ip route|awk '/default/ { print $3 }')
+            DOCKER_INTERNAL_IP=$(/usr/sbin/ip route|awk '/default/ { print $3 }')
             echo -e "$DOCKER_INTERNAL_IP    $DOCKER_INTERNAL_HOST" | tee -a /etc/hosts > /dev/null
         fi
     fi

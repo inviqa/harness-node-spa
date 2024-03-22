@@ -3,6 +3,11 @@
 FROM console as node
 COPY .my127ws/docker/image/app/root-node /
 
+RUN apt-get update && apt-get install --no-install-recommends -y iproute2 \
+ && apt-get auto-remove -qq -y \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
+
 FROM {{ @('services.app.build.from.nginx') }} as nginx
 
 RUN apk add --no-cache jq
