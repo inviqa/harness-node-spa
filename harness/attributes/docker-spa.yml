@@ -7,7 +7,7 @@ attributes.default:
       build:
         from:
           node: = 'node:' ~ @('node.version') ~ '-slim'
-          nginx: nginx:1.25-alpine3.17
+          nginx: nginx:1.25-alpine
       environment:
         HOST_OS_FAMILY: = @('host.os')
       resources:
@@ -16,7 +16,7 @@ attributes.default:
       build:
         from: = 'node:' ~ @('node.version') ~ '-slim'
       publish: false
-  
+
   pipeline:
     base:
       ingresses:
