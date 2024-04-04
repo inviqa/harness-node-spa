@@ -23,6 +23,10 @@ services:
       target: nginx
     image: {{ @('services.app.image') }}
 {% endif %}
+{% if @('host.os') == 'linux' %}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+{% endif %}
     labels:
       - traefik.backend={{ @('workspace.name') }}
       - traefik.frontend.rule=Host:{{ hostnames|join(',') }}
