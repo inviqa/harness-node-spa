@@ -4,6 +4,7 @@
 {% endif %}
 {% set hostnames = [@('hostname')] %}
 {% set hostnames = hostnames|merge(@('hostname_aliases')|map(alias => "#{alias}." ~ @('domain'))) %}
+{% set traefikRules = hostnames|map(hostname => "Host(`" ~ hostname ~ "`)") %}
 services:
   app:
     build:
@@ -24,10 +25,16 @@ services:
     image: {{ @('services.app.image') }}
 {% endif %}
     labels:
+      # Traefik 1, deprecated
       - traefik.backend={{ @('workspace.name') }}
       - traefik.frontend.rule=Host:{{ hostnames|join(',') }}
       - traefik.docker.network=my127ws
       - traefik.port={{ @('app.build') == 'static' ? '80' : @('app.node_web_port') }}
+      # Traefik 2
+      - traefik.enable=true
+      # - traefik.docker.network=my127ws
+      - traefik.http.routers.{{ @('workspace.name') }}-node.rule={{ traefikRules | join(' || ') }}
+      - traefik.http.services.{{ @('workspace.name') }}-node.loadbalancer.server.port={{ @('app.build') == 'static' ? '80' : @('app.node_web_port') }}
     networks:
       private:
         aliases:
