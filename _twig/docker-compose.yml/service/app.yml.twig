@@ -33,8 +33,8 @@ services:
       # Traefik 2
       - traefik.enable=true
       # - traefik.docker.network=my127ws
-      - traefik.http.routers.{{ @('workspace.name') }}-node.rule={{ traefikRules | join(' || ') }}
-      - traefik.http.services.{{ @('workspace.name') }}-node.loadbalancer.server.port={{ @('app.build') == 'static' ? '80' : @('app.node_web_port') }}
+      - traefik.http.routers.{{ @('workspace.name') }}.rule={{ traefikRules | join(' || ') }}
+      - traefik.http.services.{{ @('workspace.name') }}.loadbalancer.server.port={{ @('app.build') == 'static' ? '80' : @('app.node_web_port') }}
     networks:
       private:
         aliases:
